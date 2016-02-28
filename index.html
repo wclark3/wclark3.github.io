@@ -1,0 +1,62 @@
+---
+layout: default
+title: Will Clark @ GitHub Pages
+---
+
+<div id="home">
+
+    <p class="mdl-typography--title">Blog</p>
+
+    <ul class="mdl-list">
+        {% for post in site.posts %}
+        <li class="mdl-list__item mdl-list__item--two-line">
+            <span class="mdl-list__item-primary-content">
+              <span><a href="{{ post.url }}">{{ post.title }}</a></span>
+              <span class="mdl-list__item-sub-title">{{ post.date | date_to_string }}</span>
+          </span>
+      </li>
+      {% endfor %}
+  </ul>
+
+  <p class="mdl-typography--title">Papers</p>
+
+  <ul class="mdl-list">
+      <li class="mdl-list__item mdl-list__item--two-line">
+          <span class="mdl-list__item-primary-content">
+            <span><a href="http://www.imf.org/external/pubs/cat/longres.aspx?sk=42698.0" target="_blank">Harnessing Resource Wealth for Inclusive Growth in Fragile States (with Corinne Delechat et al.)</a></span>
+            <span class="mdl-list__item-sub-title">11 Feb 2015</span>
+        </span>
+    </li>
+    <li class="mdl-list__item mdl-list__item--two-line">
+        <span class="mdl-list__item-primary-content">
+          <span><a href="https://www.imf.org/external/pubs/cat/longres.aspx?sk=41457.0" target="_blank">Surging Investment and Declining Aid: Evaluating Debt Sustainability in Rwanda (with Birgir Arnason)</a></span>
+          <span class="mdl-list__item-sub-title">31 Mar 2014</span>
+      </span>
+  </li>
+  <li class="mdl-list__item mdl-list__item--two-line">
+      <span class="mdl-list__item-primary-content">
+        <span><a href="https://www.imf.org/external/pubs/cat/longres.aspx?sk=41065.0" target="_blank">The Investment-Financing-Growth Nexus in Liberia (with Manuel Rosales)</a></span>
+        <span class="mdl-list__item-sub-title">22 Nov 2013</span>
+    </span>
+</li>
+</ul>
+
+<p class="mdl-typography--title">Miscellany</p>
+
+<ul class="mdl-list">
+    <li class="mdl-list__item mdl-list__item--two-line">
+      <span class="mdl-list__item-primary-content">
+        <span><a href="http://www.chicagotribune.com/bluesky/originals/ct-open-macro-chicago-app-challenge-bsi-20150610-story.html" target="_blank">Open Macro written up in the Chicago Tribune</a></span>
+        <span class="mdl-list__item-sub-title">09 Jun 2015</span>
+        </span>
+    </li>
+
+    <li class="mdl-list__item mdl-list__item--two-line">
+        <span class="mdl-list__item-primary-content">
+        <span><a href="https://appchallenge.uchicago.edu/page/open-macro" target="_blank">Open Macro wins the 2015 App Challenge!</a></span>
+        <span class="mdl-list__item-sub-title">28 May 2015</span>
+        </span>
+    </li>
+</ul>
+
+</div>
