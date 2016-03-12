@@ -64,11 +64,15 @@
 	color: #FFFFFF;
 }
 
-img {
-  width: 100%;
+.ggplot-img {
+  width:80%; 
+  display:block; 
+  margin: 0 auto;
 }
 
-#bball-link {
-  margin: 5px;
-  background-color: #3F51B5;
+.blockquote {
+  font-style: italic;
+  padding-left: 30px;
+  padding-right: 30px;
+  display:block;
 }

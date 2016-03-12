@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 title: About
 ---
 <p class="mdl-typography--headline">{{ page.title }}</p>
