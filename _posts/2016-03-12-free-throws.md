@@ -15,7 +15,7 @@ This week's <a href="http://fivethirtyeight.com/features/should-you-shoot-free-t
 
 The (X, Y) coordinate of a regular overhand shot is determined by two random draws from <a href="https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables" target="_blank">independent and identically distributed</a> normal distributions. We are given the mean but need to calculate the variance such that the probability of making a shot is 75 percent (the NBA average).
 
-Put differently, we need to find the variance of the normal distributions such that the distance between the shot's (x,y) location and the origin is less than one. We can express the square of this distance as:
+Put differently, we need to find the variance of the normal distributions such that the distance between the shot's (X,Y) location and the origin is less than one. We can express the square of this distance as:
 
 \\[ D^2 = X^2 + Y^2 \\]
 
@@ -25,7 +25,7 @@ Our job is to find the value of \\(\sigma\\) such that the cumulative probabilit
 
 <p class="mdl-typography--subhead">Calibrating the Probability Distribution</p>
 
-We need to calibrate the gamma distribution such that the cumulative probability of a shot with distance less than one is 75 percent.
+We need to calibrate the gamma distribution such that the cumulative probability of a shot with distance less than one is 75 percent. This is simpler to visualize if we think about what the <a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function" target="_blank">cumulative distribution function</a> of the calibrated gamma distribution should look like:
 
 <img src="/assets/gamma_cdf.png" class="ggplot-img">
 
@@ -47,8 +47,21 @@ This looks good! For N = 10,000, we "make" a shot about 74.8 percent of the time
 
 <p class="mdl-typography--subhead">Solution: Should You Shoot Underhand?</p>
 
-Now we're close to the payoff. We've calibrated the variance of our X and Y distributions and need to find the probability than Y is less than one in absolute value. We can see this easily from the cumulative probability density function of our Y distribution.
+Now we're close to the payoff. We've calibrated the variance of our X and Y distributions and need to find the probability than Y is less than one in absolute value. We can see this easily from the cumulative probability density function of our Y distribution:
 
 <img src="/assets/norm_cdf.png" class="ggplot-img">
 
-The probability that Y is less than 1 in absolute value is equal to Pr(Y<1) - Pr(Y>-1) = 0.9520545 - 0.04794548. That is, <strong>if you shoot your free throws underhand, you should expect to make your shot 90.41090 percent of the time</strong>.
+The probability that Y is less than 1 in absolute value is equal to:
+\\[ Pr( \\vert Y \\vert <1) = Pr(Y<1) - Pr(Y<-1) = 0.9520545 - 0.04794548 = 0.9041090 \\]
+That is, <strong>if you shoot your free throws underhand, you should expect to make your shot 90.41090 percent of the time</strong>.
+
+<p class="mdl-typography--subhead">Extension: No Free Lunches</p>
+
+In basketball as in life, there are no free lunches. Suppose shooting underhanded really did eliminate the variance from your shot's X location, but at the cost of increasing the variance of your shot's Y location. How much would the variance of Y have to increase before you would be indifferent between shooting normally and shooting underhanded?
+
+Let's call the new, high variance Y location Y'. The key here is to select a variance of Y' such that the cumulative probability between -1 and 1 is 0.75. We can use the same search algorithm as we did when calibrating our gamma distribution. Here, I find that the variance of Y' is 0.8693011. The cumulative distribution function of Y' helps visualize the change (the original CDF is plotted in light gray):
+
+<img src="/assets/norm_cdf_xc.png" class="ggplot-img">
+
+In other words, the variance of a shot's Y location would have to increase by 44.74813 percent:
+\\[ \frac{\text{var}(Y)}{\text{var}(Y')}-1 = \frac{0.8693011}{0.6005612} - 1 = 44.74813 \% \\]
