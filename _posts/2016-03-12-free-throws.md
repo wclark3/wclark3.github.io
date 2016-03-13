@@ -64,4 +64,4 @@ Let's call the new, high variance Y location Y'. The key here is to select a var
 <img src="/assets/norm_cdf_xc.png" class="ggplot-img">
 
 In other words, the variance of a shot's Y location would have to increase by 44.74813 percent:
-\\[ \frac{\text{var}(Y)}{\text{var}(Y')}-1 = \frac{0.8693011}{0.6005612} - 1 = 44.74813 \% \\]
+\\[ \frac{\text{var}(Y')}{\text{var}(Y)}-1 = \frac{0.8693011}{0.6005612} - 1 = 44.74813 \% \\]
