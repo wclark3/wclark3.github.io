@@ -3,7 +3,7 @@ layout: post
 title: Should You Shoot Free Throws Underhand?
 ---
 
-<p class="mdl-typography--headline">{{ page.title }}</p>
+<h1>{{ page.title }}</h1>
 
 This week's <a href="http://fivethirtyeight.com/features/should-you-shoot-free-throws-underhand/" target="_blank">FiveThirtyEight.com Riddler</a>:
 
@@ -11,7 +11,7 @@ This week's <a href="http://fivethirtyeight.com/features/should-you-shoot-free-t
 
 <span class="blockquote">But suppose you switch it up, and go granny-style, which in this universe eliminates any possible left-right error in your free throws. What’s the probability you make your shot now? (Put another way, calculate the probability that Y is less than 1 in absolute value.)</span>
 
-<p class="mdl-typography--subhead">Understanding the Problem</p>
+<h2>Understanding the Problem</h2>
 
 The (X, Y) coordinate of a regular overhand shot is determined by two random draws from <a href="https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables" target="_blank">independent and identically distributed</a> normal distributions. We are given the mean but need to calculate the variance such that the probability of making a shot is 75 percent (the NBA average).
 
@@ -23,7 +23,7 @@ The distance is the sum of the square of two random normal variables (we should 
 
 Our job is to find the value of \\(\sigma\\) such that the cumulative probability of distance being less than one is 75 percent. Once we find the calibrated standard deviation, we can go back to our normal distribution of Y and find the cumulative probability that Y is less than one in absolute value.
 
-<p class="mdl-typography--subhead">Calibrating the Probability Distribution</p>
+<h2>Calibrating the Probability Distribution</h2>
 
 We need to calibrate the gamma distribution such that the cumulative probability of a shot with distance less than one is 75 percent. This is simpler to visualize if we think about what the <a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function" target="_blank">cumulative distribution function</a> of the calibrated gamma distribution should look like:
 
@@ -37,7 +37,7 @@ There are closed-form solutions that you can write down to solve the CDF of the 
 </ol>
 There are efficient search algorithms you can use for this, but since this is a small-scale problem, I started with a large range and a coarse search grid, found an approximate right answer, and then ran the search again over a small range with a fine search grid. I find that the proper value of \\(\sigma\\) is 0.6005612.
 
-<p class="mdl-typography--subhead">Verify by Simulation</p>
+<h2>Verify by Simulation</h2>
 
 As a check of our intuition, we can use this calibrated value of \\(\sigma\\) to simulate a series of free throw shots and see how many we "make." To do so, we take N draws from the X and Y i.i.d. normal distributions, calculate the distance of each pair of draws, and see how many have distance less than one.
 
@@ -45,7 +45,7 @@ As a check of our intuition, we can use this calibrated value of \\(\sigma\\) to
 
 This looks good! For N = 10,000, we "make" a shot about 74.8 percent of the time. We would expect some noise as even for large N there is still some randomness in the shot draws, but this tells us that our \\(\sigma\\) value is calibrated correctly.
 
-<p class="mdl-typography--subhead">Solution: Should You Shoot Underhand?</p>
+<h2>Solution: Should You Shoot Underhand?</h2>
 
 Now we're close to the payoff. We've calibrated the variance of our X and Y distributions and need to find the probability than Y is less than one in absolute value. We can see this easily from the cumulative probability density function of our Y distribution:
 
@@ -55,7 +55,7 @@ The probability that Y is less than 1 in absolute value is equal to:
 \\[ Pr( \\vert Y \\vert <1) = Pr(Y<1) - Pr(Y<-1) = 0.9520545 - 0.04794548 = 0.9041090 \\]
 That is, <strong>if you shoot your free throws underhand, you should expect to make your shot 90.41090 percent of the time</strong>.
 
-<p class="mdl-typography--subhead">Extension: No Free Lunches</p>
+<h2>Extension: No Free Lunches</h2>
 
 In basketball as in life, there are no free lunches. Suppose shooting underhanded really did eliminate the variance from your shot's X location, but at the cost of increasing the variance of your shot's Y location. How much would the variance of Y have to increase before you would be indifferent between shooting normally and shooting underhanded?
 

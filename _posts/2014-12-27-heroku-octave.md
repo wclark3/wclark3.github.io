@@ -3,13 +3,13 @@ layout: post
 title: Installing GNU Octave from Source on a Heroku Dyno
 ---
 
-<p class="mdl-typography--headline">{{ page.title }}</p>
+<h1>{{ page.title }}</h1>
 
 This is Part 2 of a set of posts on how to hack together a buildpack for Heroku that runs <a href="https://www.gnu.org/software/octave/">GNU Octave</a>, the open-source Matlab clone that can solve and simulate medium-scale dynamic macroeconomic models. I'm starting with a Heroku app that runs <a href="http://nodejs.org/">node.js</a>, and all the terminal commands I list here are run in a one-off web dyno that I accessed via <span class="tt">heroku run bash</span>.
 
 In <a href="{% post_url 2014-12-20-heroku-gcc %}">Part 1</a>, I discussed how to install the GNU Compiler Collection, and I will assume here that GCC is already installed and that <span class="tt">../gcc/bin</span> has been added to the <span class="tt">PATH</span> environment variable.
 
-<p class="mdl-typography--subhead">Prerequisites</p>
+<h2>Prerequisites</h2>
 
 The official list of prerequisites can be found <a href="https://www.gnu.org/software/octave/doc/interpreter/External-Packages.html#External-Packages" target="_blank" >here</a>. Some of these are already installed on a Heroku dyno, and some will not be needed since we are not going to use Octave's graphics functionality. We will need to install:
 <ul><li><a href="http://www.netlib.org/blas">Basic Linear Algebra Subroutine library (BLAS)</a></li>
@@ -25,7 +25,7 @@ eigenvalue problems</a></li>
 <li><a href="http://faculty.cse.tamu.edu/davis/suitesparse.html" target="_blank">SuiteSparse, a sparse matrix factorization library</a></li>
 </ul>
 
-<p class="mdl-typography--subhead">Folder structure</p>
+<h2>Folder structure</h2>
 
 Some of the libraries above will be needed just for installation, and some will be needed in the final buildpack for Octave to run. The libraries that are needed for installation only can be installed in <span class="tt">/app/.heroku</span>, but the libraries that will go in the buildpack should be installed inside of Octave's install directory (which we have to make). SOmething like this will suffice:
 {% highlight console %}
@@ -36,7 +36,7 @@ Some of the libraries above will be needed just for installation, and some will 
 {% endhighlight %}
 We will use this folder <span class="tt">/app/.heroku/octave/deps</span> to install the libraries that should end up in the final buildpack.
 
-<p class="mdl-typography--subhead">BLAS and LAPACK (with ATLAS)</p>
+<h2>BLAS and LAPACK (with ATLAS)</h2>
 
 Instead of installing the normal BLAS and LAPACK, we'll use an accelerated BLAS library (that will hopefully make Octave run a little faster) called <a href="http://math-atlas.sourceforge.net/">ATLAS</a>. This has to be done first, as some of the other libraries will need to refer to BLAS and LAPACK.
 
@@ -54,7 +54,7 @@ The ATLAS tar-file can be found <a href="http://sourceforge.net/projects/math-at
 
 All other libraries that need to find the BLAS or LAPACK libraries should point to a specific s-file: <span clas="tt">/app/.heroku/octave/deps/atlas/lib/libtatlas.so</span>.
 
-<p class="mdl-typography--subhead">ARPACK</p>
+<h2>ARPACK</h2>
 
 ARPACK is thankfully maintained in GitHub these days and is fairly easy to install. We only need to clone the GitHub repository and point the configure script to our BLAS library that was installed above. The GitHub command line utilities are already installed on a Heroku dyno, making the operation very simple.
 {% highlight console %}
@@ -73,7 +73,7 @@ Lastly, we must add the <span class="tt">lib</span> directory to <span class="tt
 ~/.heroku/octave/deps/arpack $ export LDFLAGS="$LDFLAGS -L$PWD/lib"
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">FFTW</p>
+<h2>FFTW</h2>
 
 The Fastest Fourier Transform in the West library has a wicked cool name but was a big pain to figure out how to install. This must be installed twice, once with a single-precision/float version (which we will call FFTWF) and once with a double-precision version (which we will call FFTW). FFTWF must be installed in the <span class="tt">../octave/deps</span> folder, while FFTW will be installe<span class="tt">lib</span> in <span class="tt">/app/.heroku</span> as it is not needed in the final buildpack. 
 
@@ -111,7 +111,7 @@ Once again, update the flags.
 ~/.heroku/fftw $ export CPPFLAGS="$CPPFLAGS -I$PWD/include"
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">GLPK</p>
+<h2>GLPK</h2>
 
 GLPK is a very straightforward install, as you can get it from the GNU FTP server and it needs no special configuration. It can go directly into <span class="tt">/app/.heroku</span>. Without further comment...
 {% highlight console %}
@@ -130,7 +130,7 @@ Once again, update the flags.
 ~/.heroku/glpk $ export CPPFLAGS="$CPPFLAGS -I$PWD/include"
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">GNU gperf</p>
+<h2>GNU gperf</h2>
 
 GNU gperf is another pretty one to install. We can put it in the <span class="tt">/.heroku</span> folder, and it follows the standard configure/make/install procedure. Once it has been installed, add the <span class="tt">\bin</span> directory to the path.
 
@@ -145,7 +145,7 @@ GNU gperf is another pretty one to install. We can put it in the <span class="tt
 ~/.heroku/gperf-3.0.4 $ export PATH=$PATH:$PWD
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">HDF5</p>
+<h2>HDF5</h2>
 
 HDF5 is another very easy one. The only trick is that it must be installed in <span class="tt">../octave/deps</span> as it needs to be included as part of the final buildpack.
 {% highlight console %}
@@ -164,7 +164,7 @@ As before, update the flags.
 ~/.heroku/octave/deps/hdf5 $ export CPPFLAGS="$CPPFLAGS -I$PWD/include"
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">Qhull</p>
+<h2>Qhull</h2>
 
 Qhull is one of the trickier libraries to install because it doesn't follow the standard configure/make/install procedure. Once we unzip the tar file, we'll need to edit the Makefile to specify our install directory. I hate using whatever editor comes loaded on a Heroku dyno, so I actually did this locally and then scp'd the Makefile back onto the Heroku dyno after it was edited. We can install it in <span class="tt">/app/.heroku</span>.
 {% highlight console %}
@@ -192,7 +192,7 @@ In addition to adding the <span class="tt">include</span> directory to <span cla
 ~/.heroku/qhull $ export CPPFLAGS="$CPPFLAGS -I$PWD/include"
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">QRUPDATE</p>
+<h2>QRUPDATE</h2>
 
 QRUPDATE cannot be curl'd; it must be scp'd from <a href="http://sourceforge.net/projects/qrupdate/?source=typ_redirect" target="_blank">here</a>. This is another tough one, since it does not use the configure/make/make install procedure. Once you have the source code loaded on the Heroku dyno, you must edit the <span class="tt">Makeconf</span> file to point to our BLAS and LAPACK libraries as well as our non-standard install directory (inside of <span class="tt">../octave/deps</span>).
 {% highlight console %}
@@ -221,7 +221,7 @@ The <span class="tt">lib</span> directory must be added to <span class="tt">LD_L
 ~/.heroku/octave/deps/qrupdate $ export LDFLAGS="$LDFLAGS -L$PWD/lib"
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">SuiteSparse</p>
+<h2>SuiteSparse</h2>
 
 SuiteSparse is the last library to install. We can put it right into <span class="tt">/app/.heroku</span>, but it's a bit of a pain to install (this should sound familiar by now). For starters, we must use a version less than 4.3 as the build configuration changed and will not work with Octave. SuiteSparse also does not follow the configure/make/make install procedure--we must edit a Makefile to point to our BLAS/LAPACK and install directories.
 
@@ -256,7 +256,7 @@ Once again, update the flags.
 ~/.heroku/SuiteSparse $ export CPPFLAGS="$CPPFLAGS -I$PWD/include"
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">Configure and Install Octave</p>
+<h2>Configure and Install Octave</h2>
 
 Now that all the required libraries are installed, we can finally install Octave. The source code is hosted on the GNU FTP server and we can use the normal configure/make/install process. We only need to specify where our BLAS/LAPACK libraries are, and we need to tell Octave not to install any of the graphics components (since we will be using this as a back-end computational tool with no graphics required).
 

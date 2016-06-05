@@ -3,11 +3,11 @@ layout: post
 title: Installing the GNU Compiler Collection from Source on a Heroku Dyno
 ---
 
-<p class="mdl-typography--headline">{{ page.title }}</p>
+<h1>{{ page.title }}</h1>
 
 This is Part 1 of a set of posts on how to hack together a buildpack for Heroku that runs <a href="https://www.gnu.org/software/octave/">GNU Octave</a>, the open-source Matlab clone that can solve and simulate medium-scale dynamic macroeconomic models. I'm starting with a Heroku app that runs <a href="http://nodejs.org/">node.js</a>, and all the terminal commands I list here are run in a one-off web dyno that I accessed via <span class="tt">heroku run bash</span>.
 
-<p class="mdl-typography--subhead">Prerequisites</p>
+<h2>Prerequisites</h2>
 
 The GNU Compiler Collection (GCC) actually comes loaded on a Heroku web dyno out of the box, but as far as I can tell it comes without a Fortran compiler (which is required to build Octave). The full list of prerequisites can be found <a href="https://gcc.gnu.org/install/prerequisites.html">here</a>, but the three that we'll need to install are
 <ul><li><a href="https://gmplib.org/">GNU Multiple Precision Arithmetic Library (GMP)</a></li>
@@ -19,7 +19,7 @@ These are actually pretty easy. They can all be downloaded from the <a href="ftp
 
 The order in which these packages are installed does matter. GMP can be installed by itself, but MPFR must be compiled with GMP, and MPC must be compiled with GMP and MPFR.
 
-<p class="mdl-typography--subhead">GMP</p>
+<h2>GMP</h2>
 
 Download the GMP tarball from the GNU archive and unzip it into a build folder. Make a directory in /app/.heroku/ where the installed files will live. Tell the configure script where the install directory is, then configure, make, and install.
 
@@ -39,7 +39,7 @@ Lastly, we need to add the <span class="tt">lib</span> directory to the <span cl
 ~/.heroku/gmp/lib $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">MPFR</p>
+<h2>MPFR</h2>
 
 We can install MPFR with the same procedure that we used for GMP. The only difference is that we need to point the configure script to the GMP install directory.
 
@@ -59,7 +59,7 @@ Once again, add the <span class="tt">lib</span> directory to the <span class="tt
 ~/.heroku/mpfr/lib $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">MPC</p>
+<h2>MPC</h2>
 
 Repeat for MPC. We need to tell the configure script where GMP and MPFR are installed.
 
@@ -79,7 +79,7 @@ Again, add the <span class="tt">lib</span> directory to the <span class="tt">LD_
 ~/.heroku/mpc/lib $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
 {% endhighlight %}
 
-<p class="mdl-typography--subhead">Installing GCC</p>
+<h2>Installing GCC</h2>
 
 Now we're ready to install GCC. It follows more or less the same procedure. Normally, GCC will look for GMP, MPC, and MPFR in <span class="tt">/usr/bin/</span> or some similar directory, but since we have these installed in a non-standard location, we will have to tell GCC's configure script where they are. We can do this by passing arguments to the configure script that list the install directories we used in the previous steps.
 
